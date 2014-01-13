@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Emissão de Certificado - ICP Admin</title>
+	</ui:define>
+	
+	
+	<ui:define name="title">
+		<h1>Emissão de Certificado</h1>
+	</ui:define>
+	
+	
+	<ui:define name="content">
+		<h:form id="formCert" method="post">
+			<p:panel style="border:none">
+			<h:panelGroup layout="block" style="width:800px">
+				<h:panelGrid columns="3" cellpadding="2" width="100%">
+		 			<h:outputText value="Tipo:" />
+				 	<h:outputText value="AC Emissora:" />
+			 		<h:outputText value="Senha da AC Emissora:" />
+
+					<p:selectOneMenu value="#{icpadmin.icp.certParams.tipo}" effect="fade" required="true"
+					 	title="Tipo de Certificado" style="width:270px"
+					 	converter="#{icpadmin.icp.tipoCertConverter}" converterMessage="Especifique o Tipo de Certificado."
+		 				requiredMessage="Especifique o Tipo de Certificado." >  
+						<f:selectItem itemLabel="Selecione..." itemValue="#{-1}"  />  
+						<f:selectItems value="#{icpadmin.icp.listarTipoCert}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}"/>
+						<p:ajax event="change" update="panelNewCert" />
+					</p:selectOneMenu>
+					<p:selectOneMenu value="#{icpadmin.icp.acSelecionada}" effect="fade" required="true"
+						converter="#{icpadmin.icp.caConverter}" converterMessage="Especifique a AC Emissora."
+				 		requiredMessage="Especifique a AC Emissora." title="Nome da AC Emissora" style="width:270px">  
+						<f:selectItem itemLabel="Selecione..." itemValue="#{null}"  />  
+						<f:selectItems value="#{icpadmin.icp.listarAC}" var="ac" itemLabel="#{ac.commonName}" itemValue="#{ac}"/>
+						<p:ajax event="change" update="panelNewCert" />
+					</p:selectOneMenu> 				 	
+			 		<p:password id="acPwd" value="#{icpadmin.icp.certParams.caPassword}" required="true"
+			 			requiredMessage="Especifique a senha da AC Emissora."
+			 			title="Senha da AC Emissora" feedback="false" style="width:200px" />
+				</h:panelGrid>
+
+				<h:panelGroup id="panelNewCert" layout="block" style="width:100%">
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+				 	<h:outputText value="Senha:" />
+			 		<h:outputText value="Confirmar Senha:" />
+				 	<p:password id="pwd" value="#{icpadmin.icp.certParams.keyPassword}" maxlength="20" required="true"
+				 		requiredMessage="Especifique a senha para o certificado." match="pwd2"
+				 		validatorMessage="Senhas não conferem. Digite novamente."
+				 		promptLabel="Digite a senha" goodLabel="Boa" strongLabel="Forte" weakLabel="Fraca"
+		 				title="Senha do certificado a ser emitido" feedback="true" inline="false" style="width:376px" />
+			 		<p:password id="pwd2" value="#{icpadmin.icp.certParams.keyPassword}" maxlength="20" required="true"
+			 			requiredMessage="Confirme a senha para o certificado."
+			 			title="Confirmação da Senha do certificado" style="width:376px" />
+				</h:panelGrid>
+			 	
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="3" cellpadding="2" width="100%">
+			 		<h:outputText value="Nome:" />
+		 			<h:outputText value="CPF:" />
+				 	<h:outputText value="CNPJ:" />
+
+			 		<p:inputText value="#{icpadmin.icp.certParams.nome}"
+			 			maxlength="#{icpadmin.icp.certParams.tipo.id == 0 or icpadmin.icp.certParams.tipo.id == 2 ? 52 : (icpadmin.icp.certParams.tipo.id == 4 ? 64 : 49)}"
+			 			required="true" requiredMessage="Especifique o nome do titular."
+			 			title="Nome do titular do certificado" style="width:325px" />
+		 			<p:inputText value="#{icpadmin.icp.certParams.cpf}" maxlength="11" required="true"
+		 				requiredMessage="Especifique o CPF do responsável."
+		 				title="CPF do responsável pelo certificado" style="width:200px" />
+				 	<p:inputText value="#{icpadmin.icp.certParams.cnpj}" maxlength="14" required="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+			 			requiredMessage="Especifique o CNPJ do titular." disabled="#{icpadmin.icp.certParams.tipo.id == 0 or icpadmin.icp.certParams.tipo.id == 2}"
+			 			title="CNPJ do titular do certificado" style="width:200px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="4" cellpadding="2" width="100%">
+			 		<h:outputText value="Nome Empresarial (PJ):" />
+		 			<h:outputText value="Domínio (DNS):" />
+				 	<h:outputText value="GUID Servidor:" />
+				 	<h:outputText value="Nome da Aplicação:" />
+
+			 		<p:inputText value="#{icpadmin.icp.certParams.nomePJ}" maxlength="64"
+			 			disabled="#{icpadmin.icp.certParams.tipo.id == 0 or icpadmin.icp.certParams.tipo.id == 2}"
+			 			required="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+			 			requiredMessage="Especifique o nome empresarial (Pessoa Jurídica)."
+			 			title="Nome empresarial do titular do certificado (PJ)" style="width:180px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.nomeDNS}" maxlength="64"
+			 			disabled="#{icpadmin.icp.certParams.tipo.id != 4}"
+			 			required="#{icpadmin.icp.certParams.tipo.id == 4}"
+			 			requiredMessage="Especifique o nome de domínio do servidor (DNS)."
+			 			title="Nome de domínio (DNS) do servidor que usará o certificado" style="width:178px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.guidServer}" maxlength="32"
+			 			disabled="#{icpadmin.icp.certParams.tipo.id != 4}" required="false"
+			 			requiredMessage="Especifique o GUID do servidor (em hexadecimal)."
+			 			title="GUID do servidor que usará o certificado (em hexadecimal)" style="width:178px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.nomeApp}" maxlength="64"
+			 			disabled="#{icpadmin.icp.certParams.tipo.id != 5}"
+			 			required="#{icpadmin.icp.certParams.tipo.id == 5}"
+			 			requiredMessage="Especifique o nome da aplicação."
+			 			title="Nome da aplicação que usará o certificado" style="width:180px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="3" cellpadding="2" width="100%">
+				 	<h:outputText value="Data de Nascimento:" />
+				 	<h:outputText value="Email:" />
+		 			<h:outputText value="Nome de Login:" />
+
+				 	<p:calendar value="#{icpadmin.icp.certParams.nascimento}" pattern="dd/MM/yyyy" required="true"
+				 		requiredMessage="Especifique a Data de Nascimento do responsável."
+				 		title="Data de Nascimento do responsável pelo certificado" style="width:200px" />
+				 	<p:inputText value="#{icpadmin.icp.certParams.email}" maxlength="64" required="true"
+				 		requiredMessage="Especifique o Email do responsável."
+				 		title="Email do responsável pelo certificado" style="width:288px" />
+		 			<p:inputText value="#{icpadmin.icp.certParams.login}" maxlength="64" required="false"
+		 				requiredMessage="Especifique o Nome de Login do responsável."
+		 				disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+		 				title="Nome de Login do responsável pelo certificado" style="width:288px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="3" cellpadding="2" width="100%">
+				 	<h:outputText value="RIC:" />
+				 	<h:outputText value="PIS/PASEP:" />
+				 	<h:outputText value="CEI:" />
+
+			 		<p:inputText value="#{icpadmin.icp.certParams.ric}" maxlength="11" required="#{icpadmin.icp.certParams.tipo.id == 2}"
+			 			requiredMessage="Especifique o RIC do titular." disabled="#{icpadmin.icp.certParams.tipo.id != 2}"
+			 			title="RIC do titular do certificado" style="width:242px" />
+				 	<p:inputText value="#{icpadmin.icp.certParams.pisPasep}" maxlength="11" required="false"
+				 		requiredMessage="Especifique o Número do PIS/PASEP do responsável."
+				 		title="Número de inscrição no PIS/PASEP do responsável pelo certificado" style="width:242px" />
+				 	<p:inputText value="#{icpadmin.icp.certParams.cei}" maxlength="12" required="false"
+		 				disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 1 and icpadmin.icp.certParams.tipo.id != 2}"
+				 		requiredMessage="Especifique o Número do CEI do responsável."
+				 		title="Número de inscrição no CEI do responsável pelo certificado" style="width:242px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="3" cellpadding="2" width="100%">
+				 	<h:outputText value="RG:" />
+			 		<h:outputText value="Órgão Emissor:" />
+				 	<h:outputText value="UF:" />
+
+			 		<p:inputText id="rg" value="#{icpadmin.icp.certParams.rg}" maxlength="15" required="false"
+			 			requiredMessage="Especifique o Número do RG do responsável."
+			 			title="Número do RG do responsável pelo certificado" style="width:325px" />
+			 		<p:inputText id="rgOrgEmissor" value="#{icpadmin.icp.certParams.rgOrgEmissor}" maxlength="4"	required="false"
+			 			requiredMessage="Especifique o Órgão Emissor do RG do responsável."
+			 			title="Órgão Emissor do RG do responsável pelo certificado" style="width:200px" />
+				 	<p:inputText id="rgUF" value="#{icpadmin.icp.certParams.rgUF}" maxlength="2"	required="false"
+				 		requiredMessage="Especifique a UF do RG do responsável."
+				 		title="UF do RG do responsável pelo certificado" style="width:200px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="5" cellpadding="2" width="100%">
+					<h:outputText value="Título Eleitoral:" />
+			 		<h:outputText value="Zona:" />
+			 		<h:outputText value="Seção:" />
+			 		<h:outputText value="Município:" />
+			 		<h:outputText value="UF:" />
+
+				 	<p:inputText value="#{icpadmin.icp.certParams.titulo}" maxlength="12" required="false"
+				 		requiredMessage="Especifique o Número do Título Eleitoral do responsável."
+				 		disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+				 		title="Número do Título Eleitoral do responsável pelo certificado" style="width:220px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.tituloZona}" maxlength="3" required="false"
+			 			requiredMessage="Especifique a Zona do Título Eleitoral do responsável."
+			 			disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+			 			title="Zona do Título Eleitoral do responsável pelo certificado" style="width:100px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.tituloSecao}" maxlength="4" required="false"
+			 			requiredMessage="Especifique a Seção do Título Eleitoral do responsável."
+			 			disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+			 			title="Seção do Título Eleitoral do responsável pelo certificado" style="width:100px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.tituloMunicipio}" maxlength="20" required="false"
+			 			requiredMessage="Especifique o Município do Título Eleitoral do responsável."
+			 			disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+			 			title="Município do Título Eleitoral do responsável pelo certificado" style="width:150px" />
+			 		<p:inputText value="#{icpadmin.icp.certParams.tituloUF}" maxlength="2" required="false"
+				 		requiredMessage="Especifique a UF do Título Eleitoral do responsável."
+				 		disabled="#{icpadmin.icp.certParams.tipo.id != 0 and icpadmin.icp.certParams.tipo.id != 2}"
+				 		title="UF do Título Eleitoral do responsável pelo certificado" style="width:122px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>
+
+				<h:panelGrid columns="5" cellpadding="2" width="100%">
+				 	<h:outputText value="Sigla do País (C):" />
+				 	<h:outputText value="Estado (ST):" />
+				 	<h:outputText value="Localização (L):" />
+				 	<h:outputText value="Organização (O):" />
+		 		 	<h:outputText value="Departamento (OU):" />
+
+				 	<p:inputText value="#{icpadmin.icp.certParams.subjC}" maxlength="2" required="true"
+				 		requiredMessage="Especifique a sigla do País (ex. &quot;BR&quot;)."
+				 		title="Sigla do País do responsável pelo certificado" style="width:100px">
+				 	</p:inputText>
+				 	<p:inputText value="#{icpadmin.icp.certParams.subjST}" maxlength="2"
+				 		required="#{icpadmin.icp.certParams.tipo.id == 1}" disabled="#{icpadmin.icp.certParams.tipo.id != 1}"
+				 		requiredMessage="Especifique o Estado."
+				 		title="Estado do responsável pelo certificado" style="width:90px">
+				 	</p:inputText>
+				 	<p:inputText value="#{icpadmin.icp.certParams.subjL}" maxlength="64"
+				 		required="#{icpadmin.icp.certParams.tipo.id == 1}" disabled="#{icpadmin.icp.certParams.tipo.id != 1}"
+				 		requiredMessage="Especifique a Localização (município)."
+				 		title="Localização (município) do responsável pelo certificado" style="width:100px" />
+				 	<p:inputText value="#{icpadmin.icp.certParams.subjO}" maxlength="64" required="true"
+				 		requiredMessage="Especifique o nome da Organização."
+				 		title="Nome da Organização do responsável pelo certificado" style="width:200px" />
+				 	<p:inputText value="#{icpadmin.icp.certParams.subjOU}" maxlength="64" required="true"
+				 		requiredMessage="Especifique o nome do Departamento."
+				 		title="Nome do Departamento do responsável pelo certificado" style="width:200px" />
+				</h:panelGrid>
+				
+				</h:panelGroup>
+				
+			 </h:panelGroup> 
+					 	
+				 <f:facet name="footer">
+				 	<p align="center">
+	            		<p:commandButton value="Emitir" ajax="false" action="#{icpadmin.icp.emitirCert}"
+	            			onclick="statusDialog.show();" onsuccess="statusDialog.hide();" />
+						&nbsp;  
+						<p:commandButton value="Cancelar" ajax="false" immediate="true" action="#{icpadmin.icp.goToCert}" />
+		            </p>
+				 </f:facet>
+			 </p:panel>
+			 
+			 <p:dialog modal="true" widgetVar="statusDialog" header="Emitindo Certificado. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+			 
+		</h:form>
+	</ui:define>
+
+</ui:composition>

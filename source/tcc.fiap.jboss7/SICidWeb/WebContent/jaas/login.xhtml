@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
+    
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+	<title>Login - SICid Admin</title>
+	<link rel="stylesheet" type="text/css" href="../style/style.css" media="screen" /> 
+	<link rel="shortcut icon" href="../favicon.ico" /> 
+</h:head>
+    
+<h:body>
+	<f:view contentType="text/html">
+	<div align="center">
+		<div style="margin-top:20px">
+			<div class="ui-widget-header" style="margin:0px;padding:0px;width:100%;text-align:left;">
+				<h:form id="formHeader" method="post" prependId="false">
+					<h:panelGrid columns="3" cellpadding="2">
+						<p:graphicImage value="../images/logo.png" />
+						<p:spacer width="50px" height="10px" />
+						<h1>Login</h1>
+					</h:panelGrid>
+				</h:form>
+			</div>
+		</div>
+		<div style="margin-top:4px">
+			<div style="border:1px solid silver;margin:0px;padding:0px;width:100%">
+				<form id="formLogin" name="formLogin" action="j_security_check" method="post">
+					<p:panel style="width:445px;border:none" id="panelLogin">
+						<object classid="java:SICidApplet.class" 
+				        	type="application/x-java-applet"
+				        	archive="/sicid/ui/SICidApplet.jar" 
+				        	height="250" width="400" >
+							<param name="archive" value="/sicid/ui/SICidApplet.jar" />
+							<param name="form" value="formLogin" />
+							<param name="username" value="j_username" />
+							<param name="password" value="j_password" />
+							<object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" 
+				    	    	height="250" width="400" > 
+				  				<param name="code" value="SICidApplet" />
+				  				<param name="archive" value="/sicid/ui/SICidApplet.jar" />
+								<param name="form" value="formLogin" />
+								<param name="username" value="j_username" />
+								<param name="password" value="j_password" />
+								O plugin Java é necessário para executar esta aplicação.
+							</object>
+						</object>
+						<input type="text" name="j_username" id="j_username" style="visibility:hidden" />
+						<input type="text" name="j_password" id="j_password" style="visibility:hidden" />
+					</p:panel>                        
+				</form>
+			</div>
+			<div align="right" class="ui-widget-header" style="margin:0px;padding:10px;width:98%">
+           		SICid Admin - (2012) Robson Martins / (TCC) FIAP 16SCJ
+           	</div>    
+			<div align="center" style="margin-top:10px">
+				<ui:insert name="loginMessage" />
+			</div>
+		</div>
+	</div>
+	</f:view>
+</h:body>
+	
+</html>

@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Certificados Confiáveis - SICid Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Certificados Confiáveis</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+ 		<h:form id="uploadForm" enctype="multipart/form-data">
+	    	<p:fileUpload fileUploadListener="#{sicid.cert.uploadCertConfiavel}"
+	    		label="Adicionar Certificado" mode="advanced"
+	    		invalidFileMessage="Formato de arquivo inválido. Somente são aceitos arquivos *.cer,*.crt,*.pem,*.der"
+	    		invalidSizeMessage="Tamanho do arquivo excede 100KB."
+	    		onstart="statusDialog.show();" oncomplete="statusDialog.hide();"
+	    		update=":formCert:messages,:formCert:certList" auto="true" sizeLimit="100000"
+         				allowTypes="/(\.|\/)(cer|crt|pem|der)$/" />
+		</h:form>
+		<h:form id="formCert" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+		    <p:dataTable var="cert" value="#{sicid.cert.listarCertConfiaveis}" id="certList" sortBy="#{cert.id}"
+		                 editable="false" emptyMessage="Nenhum certificado confiável cadastrado."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{sicid.cert.certSelecionado}" selectionMode="single" rowKey="#{cert.id}">
+
+				<p:ajax event="rowSelect" update=":formCert:btnPanel" />
+				
+		        <p:column headerText="Nome (DN)" width="734"
+		        			sortBy="#{cert.x509Certificate.subjectX500Principal.name}">
+                    <h:outputText value="#{cert.x509Certificate.subjectX500Principal.name}" />
+		        </p:column>
+
+		        <p:column headerText="Emitido" width="90"
+		        			sortBy="#{cert.x509Certificate.notBefore}">
+                    <h:outputText value="#{cert.x509Certificate.notBefore}">
+                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+		        </p:column>
+
+		        <p:column headerText="Expira" width="90"
+		        			sortBy="#{cert.x509Certificate.notAfter}">
+                    <h:outputText value="#{cert.x509Certificate.notAfter}">
+                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+		        </p:column>
+
+		    </p:dataTable>
+
+			<p:spacer width="100%" height="4px" />
+
+			<p:panel id="btnPanel" style="text-align:center;border:1px solid silver;margin:0px;padding:0px">
+               	<p:commandButton id="delButton"
+               			update=":formCert:dlgConfirm,:formCert:messages,:formCert:statusDialog"
+               			icon="ui-icon-cancel" value="Remover Certificado" title="Remover Certificado Confiável"
+               			oncomplete="dlgConfirm.show();" disabled="#{empty sicid.cert.certSelecionado}" />  
+			</p:panel> 				 	
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgConfirm"
+			 		header="Remover Certificado"   
+		            severity="alert" widgetVar="dlgConfirm" closable="false"
+		            message="Tem certeza que deseja remover o certificado selecionado?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgConfirm.hide();statusDialog.show();" update=":formCert:certList,:formCert:btnPanel"
+						action="#{sicid.cert.removerCertConfiavel}" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

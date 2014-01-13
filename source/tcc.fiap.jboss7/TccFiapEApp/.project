@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>TccFiapEApp</name>
+	<comment></comment>
+	<projects>
+		<project>BancoSeguro</project>
+		<project>BancoSeguroCommon</project>
+		<project>BancoSeguroEJB</project>
+		<project>ICPAdmin</project>
+		<project>ICPAdminCommon</project>
+		<project>ReceitaNacional</project>
+		<project>ReceitaNacionalCommon</project>
+		<project>ReceitaNacionalEJB</project>
+		<project>SICidCommon</project>
+		<project>SICidEJB</project>
+		<project>SICidLoginModule</project>
+		<project>SICidWeb</project>
+		<project>TccFiapCommon</project>
+		<project>ICPAdminEJB</project>
+		<project>BancoSeguroService</project>
+		<project>SICidService</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.wst.common.project.facet.core.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.wst.validation.validationbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
+		<nature>org.eclipse.wst.common.modulecore.ModuleCoreNature</nature>
+	</natures>
+</projectDescription>

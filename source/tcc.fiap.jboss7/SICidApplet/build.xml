@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="SICidApplet">
+	<target name="generatejar">
+		<jar destfile="dist/SICidApplet.jar">
+			<fileset dir="bin" />
+			<manifest>
+				<attribute name="Permissions" value="all-permissions" />
+				<attribute name="Codebase" value="tcc.fiap.robsonmartins.com java-robsonmartins.rhcloud.com localhost 127.0.0.1" />
+				<attribute name="Caller-Allowable-Codebase" value="*" />
+				<attribute name="Trusted-Only" value="false" />
+				<attribute name="Trusted-Library" value="false" />
+				<attribute name="Application-Library-Allowable-Codebase" value="*" />
+				<attribute name="Main-Class" value="SICidApplet" />
+				<attribute name="Application-Name" value="Serviço de Identificação do Cidadão" />
+				<attribute name="Implementation-Title" value="SICidApplet" />
+				<attribute name="Implementation-Version" value="1.0" />
+				<attribute name="Built-By" value="Robson Martins" />
+				<attribute name="Implementation-Vendor" value="Robson Martins" />
+				<attribute name="Application-Vendor" value="Robson Martins" />
+			</manifest>
+		</jar>
+	</target>
+	<target name="signjar">
+		<signjar destDir="dist/signed"
+    		keystore="keystore/sicid.keystore"
+    		alias="sicid" storepass="sicid" keypass="sicid"
+    		preservelastmodified="true">
+  			<path>
+    			<fileset dir="dist" includes="*.jar" />
+  			</path>
+  			<flattenmapper />
+		</signjar>
+	</target>
+</project>

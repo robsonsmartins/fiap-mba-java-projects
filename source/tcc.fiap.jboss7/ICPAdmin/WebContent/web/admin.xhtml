@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Administradores - ICP Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Administradores</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+ 		<h:form id="uploadForm" enctype="multipart/form-data">
+	    	<p:fileUpload fileUploadListener="#{icpadmin.usuario.uploadCertAdmin}"
+	    		label="Importar Certificado de Usuário" mode="advanced"
+	    		invalidFileMessage="Formato de arquivo inválido. Somente são aceitos arquivos *.cer,*.crt,*.pem,*.der"
+	    		invalidSizeMessage="Tamanho do arquivo excede 100KB."
+	    		onstart="statusDialog.show();" oncomplete="statusDialog.hide();"
+	    		update=":formUser:messages,:formUser:userList" auto="true" sizeLimit="100000"
+         				allowTypes="/(\.|\/)(cer|crt|pem|der)$/" />
+		</h:form>
+		<h:form id="formUser" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+		    <p:dataTable var="user" value="#{icpadmin.usuario.listarAdmin}" id="userList" sortBy="#{user.name}"
+		                 editable="false" emptyMessage="Nenhum administrador cadastrado."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{icpadmin.usuario.userSelecionado}" selectionMode="single" rowKey="#{user.dname}">
+
+				<p:ajax event="rowSelect" update=":formUser:btnPanel" />
+				
+		        <p:column headerText="Nome" width="180"
+		        			sortBy="#{user.name}">
+                    <h:outputText value="#{user.name}" />
+		        </p:column>
+
+		        <p:column headerText="Certificado (DN)" width="754"
+		        			sortBy="#{user.dname}">
+                    <h:outputText value="#{user.dname}" />
+		        </p:column>
+
+		    </p:dataTable>
+
+			<p:spacer width="100%" height="4px" />
+
+			<p:panel id="btnPanel" style="text-align:center;border:1px solid silver;margin:0px;padding:0px">
+           		<p:commandButton id="delButton"
+           				update=":formUser:dlgConfirm,:formUser:messages,:formUser:statusDialog"
+          				icon="ui-icon-cancel" value="Remover Administrador" title="Remover Administrador"
+           				oncomplete="dlgConfirm.show();" disabled="#{empty icpadmin.usuario.userSelecionado}" />
+			</p:panel> 				 	
+
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgConfirm"
+			 		header="Remover Administrador"   
+		            severity="alert" widgetVar="dlgConfirm" closable="false"
+		            message="Tem certeza que deseja remover o administrador selecionado?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgConfirm.hide();statusDialog.show();" update=":formUser:userList,:formUser:btnPanel"
+						action="#{icpadmin.usuario.removerUsuario}" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+			
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

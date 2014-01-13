@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Cadastro Nacional do Cidadão - SICid Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Cadastro do Cidadão</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+		<h:form id="formCidadao" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+			<p:panel id="btnPanel" style="text-align:center;border:1px solid silver;margin:0px;padding:0px">
+				<h:panelGrid columns="5" cellpadding="0">
+					<p:commandButton id="addButton" icon="ui-icon-plus" value="Cadastrar Cidadão" title="Adicionar Cidadão ao Cadastro"
+						ajax="false" action="#{sicid.cidadao.goToNovoCidadao}" />
+					<p:spacer width="4px" />
+					<p:commandButton id="renButton" icon="ui-icon-pencil" value="Editar Cidadão" title="Editar Cadastro do Cidadão"
+						ajax="false" action="#{sicid.cidadao.goToEditarCidadao}" disabled="#{empty sicid.cidadao.cidadaoSelecionado}" />
+					<p:spacer width="4px" />
+	               	<p:commandButton id="delButton"
+    	       			update=":formCidadao:dlgConfirm,:formCidadao:messages,:formCidadao:statusDialog"
+               			icon="ui-icon-cancel" value="Remover Cidadão" title="Remover Cidadão"
+               			oncomplete="dlgConfirm.show();" disabled="#{empty sicid.cidadao.cidadaoSelecionado}" />  
+               	</h:panelGrid>  
+			</p:panel> 				 	
+
+			<p:spacer width="100%" height="4px" />
+			
+		    <p:dataTable var="cidadao" value="#{sicid.cidadao.listarCidadaos}" id="cidadaoList" sortBy="#{cidadao.nome}"
+		                 editable="false" emptyMessage="Nenhum cidadão cadastrado."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{sicid.cidadao.cidadaoSelecionado}" selectionMode="single" rowKey="#{cidadao.dname}">
+
+				<p:ajax event="rowSelect" update=":formCidadao:btnPanel" />
+				
+		        <p:column headerText="Nome" width="300"
+		        			sortBy="#{cidadao.nome}">
+                    <h:outputText value="#{cidadao.nome}" />
+		        </p:column>
+		        
+		        <p:column headerText="Nascimento" width="80"
+		        			sortBy="#{cidadao.dataNascimento}">
+                    <h:outputText value="#{cidadao.dataNascimento}">
+                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+		        </p:column>
+		        
+		        <p:column headerText="Nome da Mãe" width="300"
+		        			sortBy="#{cidadao.nomeMae}">
+                    <h:outputText value="#{cidadao.nomeMae}" />
+		        </p:column>
+		        
+		        <p:column headerText="RIC" width="95"
+		        			sortBy="#{cidadao.ric}">
+                    <h:outputText value="#{cidadao.ric}" />
+		        </p:column>
+
+		        <p:column headerText="CPF" width="95"
+		        			sortBy="#{cidadao.cpf}">
+                    <h:outputText value="#{cidadao.cpf}" />
+		        </p:column>
+		    </p:dataTable>
+
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgConfirm"
+			 		header="Remover Cidadão"   
+		            severity="alert" widgetVar="dlgConfirm" closable="false"
+		            message="Tem certeza que deseja remover o cidadão selecionado?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgConfirm.hide();statusDialog.show();" update=":formCidadao:cidadaoList,:formCidadao:btnPanel"
+						action="#{sicid.cidadao.removerCidadao}" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando Cadastro. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

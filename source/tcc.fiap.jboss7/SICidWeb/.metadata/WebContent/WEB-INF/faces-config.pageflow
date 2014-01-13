@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13491161854630" configfile="/SICidServiceWeb/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="trustedCert" x="122" y="178" id="pf13491162632691" referenceLink="//@navigationRule.4/@fromViewId|" outlinks="pf13491162632692 pf13491162632693 pf13492815249270 pf13497346568540 pf13497455674420" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/apps.xhtml" id="pf13491162632694" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf13491162632692" path="/admin/apps.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/certs.xhtml" id="pf13491162632695" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13491162632693" path="/admin/certs.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/users.xhtml" id="pf13492815249271" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf13492815249270" path="/admin/users.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/cidadao.xhtml" id="pf13497346568551" referenceLink="//@navigationRule.4/@navigationCase.0/@toViewId|" inlinks="pf13497346568540" path="/admin/cidadao.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/newcidadao.xhtml" id="pf13497455674431" referenceLink="//@navigationRule.4/@navigationCase.0/@toViewId|" inlinks="pf13497455674420" path="/admin/newcidadao.xhtml"/>
+  <links id="pf13491162632692" target="pf13491162632694" source="pf13491162632691" outcome="trustedApps" redirect="true"/>
+  <links id="pf13491162632693" target="pf13491162632695" source="pf13491162632691" outcome="trustedCert" redirect="true"/>
+  <links id="pf13492815249270" target="pf13492815249271" source="pf13491162632691" outcome="trustedUsers" redirect="true"/>
+  <links id="pf13497346568540" target="pf13497346568551" source="pf13491162632691" outcome="cidadao" redirect="true"/>
+  <links id="pf13497455674420" target="pf13497455674431" source="pf13491162632691" outcome="newcidadao" redirect="true"/>
+</pageflow:Pageflow>

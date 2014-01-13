@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="sicid">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/SICidDS</jta-data-source>
+		<class>sicid.bean.CertificadoConfiavel</class>
+		<class>sicid.bean.ConsumidorConfiavel</class>
+		<class>sicid.bean.Usuario</class>
+		<class>sicid.bean.Cidadao</class>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<!-- <property name="hibernate.jdbc.batch_size" value="0"/>  -->
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="icpadmin">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/ICPAdminDS</jta-data-source>
+		<class>icp.bean.Certificado</class>
+		<class>icp.bean.Usuario</class>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<!-- <property name="hibernate.jdbc.batch_size" value="0"/> -->
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="bancoseguro">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/BancoSeguroDS</jta-data-source>
+		<class>banco.bean.ConsumidorConfiavel</class>
+		<class>banco.bean.Usuario</class>
+		<class>banco.bean.Conta</class>
+		<class>banco.bean.Extrato</class>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<!-- <property name="hibernate.jdbc.batch_size" value="0"/> -->
+		</properties>
+	</persistence-unit>
+
+	<persistence-unit name="receita">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/ReceitaNacionalDS</jta-data-source>
+		<class>receita.bean.Cidadao</class>
+		<class>receita.bean.Tributo</class>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<!-- <property name="hibernate.jdbc.batch_size" value="0"/> -->
+		</properties>
+	</persistence-unit>
+	
+</persistence>

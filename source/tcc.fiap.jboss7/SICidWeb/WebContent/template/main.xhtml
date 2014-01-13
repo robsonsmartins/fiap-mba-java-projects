@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+	<ui:insert name="headTitle"/>
+	<link rel="stylesheet" type="text/css" href="../style/style.css" />
+	<link rel="shortcut icon" href="../favicon.ico" /> 	
+</h:head>
+
+<h:body>
+	<f:view contentType="text/html" encoding="UTF-8">
+	<p:growl id="messages" showDetail="false"/>
+	<div align="center">
+		<div style="margin-top:4px">
+			<div class="ui-widget-header" style="margin:0px;padding:0px;width:100%;text-align:left;">
+				<h:form id="formHeader" method="post" prependId="false">
+					<h:panelGrid columns="3" cellpadding="2">
+						<p:graphicImage value="../images/logo.png" />
+						<p:spacer width="50px" height="10px" />
+						<ui:insert name="title"/>
+					</h:panelGrid>
+					<p:menubar>
+						<p:menuitem value="Cadastro Nacional do Cidadão" action="#{sicid.cidadao.goToCidadao}" icon="ui-icon-person" />
+						<p:menuitem value="Certificados Confiáveis" action="#{sicid.cert.goToTrustedCert}" icon="ui-icon-locked" />
+						<p:menuitem value="Aplicações Confiáveis" action="#{sicid.app.goToTrustedApps}" icon="ui-icon-newwin" />
+						<p:menuitem value="Administradores" action="#{sicid.usuario.goToTrustedUsers}" icon="ui-icon-key" />
+						<p:menuitem value="Logoff: #{sicid.loginName}" action="#{sicid.logoff}" icon="ui-icon-transferthick-e-w"
+						 	rendered="#{!empty sicid.loginName}" />
+					</p:menubar>
+				</h:form>
+			</div>
+		</div>
+		<div style="margin-top:4px">
+			<div style="border:1px solid silver;margin:0px;padding:0px;width:100%">
+				<ui:insert name="content" />
+			</div>
+			<div align="right" class="ui-widget-header" style="margin:0px;padding:10px;width:98%">
+           		SICid Admin - (2012) Robson Martins / (TCC) FIAP 16SCJ
+           	</div>    
+			<p:messages id="dmessages" showDetail="true" autoUpdate="true" severity="error"/>
+		</div>
+	</div>
+	</f:view>
+</h:body>
+
+</html>

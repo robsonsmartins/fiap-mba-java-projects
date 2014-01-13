@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Contas - Banco Seguro</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Contas</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+ 		<h:form id="uploadForm" enctype="multipart/form-data">
+	    	<p:fileUpload fileUploadListener="#{banco.conta.uploadCertCliente}"
+	    		label="Importar Certificado de Cliente" mode="advanced"
+	    		invalidFileMessage="Formato de arquivo inválido. Somente são aceitos arquivos *.cer,*.crt,*.pem,*.der"
+	    		invalidSizeMessage="Tamanho do arquivo excede 100KB."
+	    		onstart="statusDialog.show();" oncomplete="statusDialog.hide();"
+	    		update=":formConta:messages,:formConta:contaList" auto="true" sizeLimit="100000"
+         				allowTypes="/(\.|\/)(cer|crt|pem|der)$/" />
+		</h:form>
+		<h:form id="formConta" method="post">
+			<p:growl id="messages" showDetail="false"/>
+
+		    <p:dataTable var="conta" value="#{banco.conta.listarContas}" id="contaList" sortBy="#{conta.numeroConta}"
+		                 editable="false" emptyMessage="Nenhuma conta cadastrada."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{banco.conta.contaSelecionada}" selectionMode="single" rowKey="#{conta.numeroConta}">
+
+				<p:ajax event="rowSelect" update=":formConta:btnPanel" />
+				
+		        <p:column headerText="Número Conta" width="150"
+		        			sortBy="#{conta.numeroConta}">
+                    <h:outputText value="#{conta.numeroConta}">
+                    	<f:convertNumber pattern="00000" />
+                    </h:outputText>
+		        </p:column>
+
+		        <p:column headerText="CPF" width="180"
+		        			sortBy="#{conta.cliente.cpf}">
+                    <h:outputText value="#{conta.cliente.cpf}" />
+		        </p:column>
+
+		        <p:column headerText="Nome" width="580"
+		        			sortBy="#{conta.cliente.name}">
+                    <h:outputText value="#{conta.cliente.name}" />
+		        </p:column>
+		        
+		    </p:dataTable>
+
+			<p:spacer width="100%" height="4px" />
+
+			<p:panel id="btnPanel" style="text-align:center;border:1px solid silver;margin:0px;padding:0px">
+          		<p:commandButton id="delButton"
+          				update=":formConta:dlgConfirm,:formConta:messages,:formConta:statusDialog"
+          				icon="ui-icon-cancel" value="Fechar Conta" title="Fechar Conta"
+          				oncomplete="dlgConfirm.show();" disabled="#{empty banco.conta.contaSelecionada}" />
+			</p:panel> 				 	
+
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgConfirm"
+			 		header="Fechar Conta"   
+		            severity="alert" widgetVar="dlgConfirm" closable="false"
+		            message="Tem certeza que deseja fechar a conta selecionada?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgConfirm.hide();statusDialog.show();" update=":formConta:contaList,:formConta:btnPanel"
+						action="#{banco.conta.removerConta}" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+			
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

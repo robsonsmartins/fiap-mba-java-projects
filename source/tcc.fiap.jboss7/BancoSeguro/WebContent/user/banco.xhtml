@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Banco Seguro</title>
+	</ui:define>
+	
+	<ui:define name="title" />
+	
+	<ui:define name="content">
+		<h:form id="formBanco" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+			<p:layout style="width:100%;height:500px" id="layout">
+    			<p:layoutUnit position="north" style="text-align:left;padding:10px" rendered="#{banco.banco.contaUsuarioLogin ne null}">
+    			
+    				<table width="90%" cellpadding="0" cellspacing="0" align="center"><tr>
+  						<td align="left">
+		       				<h:outputText style="font-weight:bold" value="#{banco.banco.contaUsuarioLogin.cliente.name}" />
+  						</td>
+  						<td align="center">
+       						<h:outputText value="Número da Conta: " />
+       						<h:outputText style="font-weight:bold" value="#{banco.banco.contaUsuarioLogin.numeroConta}">
+								<f:convertNumber pattern="00000" />
+	       					</h:outputText>
+  						</td>
+  						<td align="right">
+       						<h:outputText value="Saldo disponível: " />
+       						<h:outputText style="font-weight:bold" value="$ " />
+       						<h:outputText style="font-weight:bold" value="#{banco.banco.contaUsuarioLogin.saldo}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0.00;(#,##0.00)" />
+	       					</h:outputText>
+  						</td>
+    				</tr></table>
+    				
+    			</p:layoutUnit>
+    			
+    			<p:layoutUnit position="west" size="200" style="text-align:center;padding:10px" rendered="#{banco.contaUsuarioLogin ne null}">
+
+       				<p:spacer width="90%" height="20px" />
+
+        			<p:commandButton style="width:90%" value="Saque" title="Efetuar saque da conta" icon="ui-icon-circle-minus" 
+        					action="#{banco.banco.resetParams}" oncomplete="dlgOperacao.show();"
+        					update=":formBanco:,:formBanco:dlgOperacao,:formBanco:messages,:formBanco:statusDialog">
+	                	<f:setPropertyActionListener value="efetuarSaque" target="#{banco.banco.actionSelecionada}" />
+        			</p:commandButton>
+
+       				<p:spacer width="90%" height="20px" />
+
+        			<p:commandButton style="width:90%" value="Depósito" title="Realizar depósito na conta" icon="ui-icon-circle-plus" 
+        					action="#{banco.banco.resetParams}" oncomplete="dlgOperacao.show();"
+        					update=":formBanco,:formBanco:dlgOperacao,:formBanco:messages,:formBanco:statusDialog">
+	                	<f:setPropertyActionListener value="efetuarDeposito" target="#{banco.banco.actionSelecionada}" />
+        			</p:commandButton>
+
+       				<p:spacer width="90%" height="20px" />
+
+        			<p:commandButton style="width:90%" value="Pagamento" title="Realizar pagamento de títulos" icon="ui-icon-circle-check" 
+        					action="#{banco.banco.resetParams}" oncomplete="dlgOperacao.show();"
+        					update=":formBanco,:formBanco:dlgOperacao,:formBanco:messages,:formBanco:statusDialog">
+	                	<f:setPropertyActionListener value="efetuarPagamento" target="#{banco.banco.actionSelecionada}" />
+        			</p:commandButton>
+
+       				<p:spacer width="90%" height="20px" />
+
+        			<p:commandButton style="width:90%" value="Transferência" title="Realizar transferência entre contas" icon="ui-icon-circle-arrow-e" 
+        					action="#{banco.banco.resetParams}" oncomplete="dlgOperacao.show();"
+        					update=":formBanco,:formBanco:dlgOperacao,:formBanco:messages,:formBanco:statusDialog">
+	                	<f:setPropertyActionListener value="efetuarTransferencia" target="#{banco.banco.actionSelecionada}" />
+        			</p:commandButton>
+        			
+    			</p:layoutUnit>
+
+    			<p:layoutUnit position="center" style="text-align:center;padding:10px" rendered="#{banco.contaUsuarioLogin eq null}">
+    				<h1>Venha para o Banco Seguro. Abra já a sua conta!</h1>
+    				<p align="center">
+    					<img src="../images/bank.jpg" width="500" height="375" alt="Bank" title="Bank" ></img>
+    				</p>
+    				Ilustração: Barclays Bank and Empire House, Dewsbury, Great Britain.<br/>
+    				© Copyright <a title="View profile" href="http://www.geograph.org.uk/profile/1712" target="_blank"
+    							   rel="cc:attributionURL dct:creator">Humphrey Bolton</a>
+    				and licensed for <a href="http://www.geograph.org.uk/reuse.php?id=230851" target="_blank">reuse</a>
+   					under this
+   					<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.0/" target="_blank"
+    				   title="Creative Commons Attribution-Share Alike 2.0 Licence">Creative Commons Licence</a>.
+    			</p:layoutUnit>
+
+    			<p:layoutUnit position="center" style="text-align:center;padding:10px" rendered="#{banco.contaUsuarioLogin ne null}">
+    				<p:panel style="width:99%;border:none;margin:0px;padding:0px">
+				    <p:dataTable var="extrato" value="#{banco.banco.extratoUsuarioLogin}" id="extratoList"
+				    			 editable="false" emptyMessage="Sem movimentação." style="text-align:left" >
+				                 
+						<f:facet name="header">  
+				            Movimentação da conta  
+				        </f:facet>  
+				        
+				        <p:column headerText="Data" width="100" style="text-align:center"
+				        			sortBy="#{extrato.data}">
+		                    <h:outputText value="#{extrato.data}">
+		                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+		                    </h:outputText>
+				        </p:column>
+		
+				        <p:column headerText="Operação" width="260"
+				        			sortBy="#{extrato.operacao.descricao}">
+		                    <h:outputText value="#{extrato.operacao.descricao}" />
+				        </p:column>
+		
+				        <p:column headerText="Valor" width="100" style="text-align:right"
+				        		styleClass="#{extrato.operacao eq 'DEPOSITO' ? null : (extrato.operacao eq 'DEPOSITO_TRANSF' ? null : 'red')}">
+		                    <h:outputText value="-" 
+		                    	rendered="#{extrato.operacao ne 'DEPOSITO' and extrato.operacao ne 'DEPOSITO_TRANSF'}"/>
+		                    <h:outputText value="#{extrato.valor}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0.00;(#,##0.00)" />
+		                    </h:outputText>
+				        </p:column>
+				        
+				        <p:column headerText="Saldo" width="100" style="text-align:right">
+		                    <h:outputText value="#{extrato.saldoFinal}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0.00;(#,##0.00)" />
+		                    </h:outputText>
+				        </p:column>
+				        
+				    </p:dataTable>
+				    </p:panel>
+    			</p:layoutUnit>
+			</p:layout>
+
+			<p:spacer width="100%" height="6px" />
+			
+			<p:dialog id="dlgOperacao" widgetVar="dlgOperacao" modal="true" hideEffect="explode" closable="false" resizable="false"
+				header="Efetuar #{(banco.banco.actionSelecionada == 'efetuarSaque') ? 'Saque' :
+				  ((banco.banco.actionSelecionada == 'efetuarDeposito') ? 'Depósito' : 
+				  ((banco.banco.actionSelecionada == 'efetuarPagamento') ? 'Pagamento' : 'Transferência'))}">  
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+			 		<h:outputText value="Valor:" />
+					<pe:inputNumber id="txtOpValor" value="#{banco.banco.valorOperacao}" style="width:150px"
+							symbol="$ " symbolPosition="p" decimalSeparator="," thousandSeparator="." emptyValue="empty" />  
+			 		<h:outputText value="Número da Conta Destino:" 
+			 				rendered="#{banco.banco.actionSelecionada == 'efetuarTransferencia'}" />
+					<p:inputText id="txtOpConta" value="#{banco.banco.numeroContaDestino}" style="width:150px" maxlength="5"
+							rendered="#{banco.banco.actionSelecionada == 'efetuarTransferencia'}">
+						<pe:keyFilter mask="num"/>
+					</p:inputText>
+					<f:facet name="footer">  
+			            <p align="center">
+						    <p:commandButton value="OK" action="#{banco.banco[banco.banco.actionSelecionada]}" update=":formBanco" ajax="false"
+						    	onclick="dlgOperacao.hide();statusDialog.show();" onsuccess="statusDialog.hide();"/>&nbsp;&nbsp;  
+							<p:commandButton value="Cancelar" oncomplete="dlgOperacao.hide()" action="#{banco.banco.resetParams}" />
+						</p>
+					</f:facet>  
+				</h:panelGrid>
+			</p:dialog>  			
+			
+			
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

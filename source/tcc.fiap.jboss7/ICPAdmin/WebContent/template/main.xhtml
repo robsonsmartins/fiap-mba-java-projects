@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+	<ui:insert name="headTitle"/>
+	<link rel="stylesheet" type="text/css" href="../style/style.css" />
+	<link rel="shortcut icon" href="../favicon.ico" /> 	
+</h:head>
+
+<h:body>
+	<f:view contentType="text/html">
+	<p:growl id="messages" showDetail="false"/>
+	<div align="center">
+		<div style="margin-top:4px">
+			<div class="ui-widget-header" style="margin:0px;padding:0px;width:100%;text-align:left;">
+				<h:form id="formHeader" method="post" prependId="false">
+					<h:panelGrid columns="3" cellpadding="2">
+						<p:graphicImage value="../images/logo.png" />
+						<p:spacer width="50px" height="10px" />
+						<ui:insert name="title"/>
+					</h:panelGrid>
+					<p:menubar>
+						<p:menuitem value="AC Raiz" action="#{icpadmin.icp.goToAcRaiz}" icon="ui-icon-locked" />
+						<p:menuitem value="AC Intermediária" action="#{icpadmin.icp.goToAcInterm}" icon="ui-icon-folder-collapsed" />
+						<p:menuitem value="Certificados" action="#{icpadmin.icp.goToCert}" icon="ui-icon-document" />
+						<p:menuitem value="Administradores" action="#{icpadmin.usuario.goToAdmin}" icon="ui-icon-person" />
+						<p:menuitem value="Backup ICP" action="#{icpadmin.icp.downloadBackupIcp}" icon="ui-icon-disk" ajax="false" />
+						<p:menuitem value="Logoff: #{icpadmin.loginName}" action="#{icpadmin.logoff}" icon="ui-icon-transferthick-e-w"
+							rendered="#{!empty icpadmin.loginName}" />
+					</p:menubar>
+				</h:form>
+			</div>
+		</div>
+		<div style="margin-top:4px">
+			<div style="border:1px solid silver;margin:0px;padding:0px;width:100%">
+				<ui:insert name="content" />
+			</div>
+			<div align="right" class="ui-widget-header" style="margin:0px;padding:10px;width:98%">
+           		ICP Admin - (2012) Robson Martins / (TCC) FIAP 16SCJ
+           	</div>    
+			<p:messages id="dmessages" showDetail="true" autoUpdate="true" severity="error"/>
+		</div>
+	</div>
+	</f:view>
+</h:body>
+
+</html>

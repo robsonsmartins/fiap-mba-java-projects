@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Aplicações Confiáveis - SICid Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Aplicações Confiáveis</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+ 		<h:form id="uploadForm" enctype="multipart/form-data">
+	    	<p:fileUpload fileUploadListener="#{sicid.app.uploadCertAppConfiavel}"
+	    		label="Importar Certificado de Aplicação" mode="advanced"
+	    		invalidFileMessage="Formato de arquivo inválido. Somente são aceitos arquivos *.cer,*.crt,*.pem,*.der"
+	    		invalidSizeMessage="Tamanho do arquivo excede 100KB."
+	    		onstart="statusDialog.show();" oncomplete="statusDialog.hide();"
+	    		update=":formApp:messages,:formApp:appList" auto="true" sizeLimit="100000"
+         				allowTypes="/(\.|\/)(cer|crt|pem|der)$/" />
+		</h:form>
+		<h:form id="formApp" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+		    <p:dataTable var="app" value="#{sicid.app.listarAppsConfiaveis}" id="appList" sortBy="#{app.name}"
+		                 editable="false" emptyMessage="Nenhuma aplicação confiável cadastrada."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{sicid.app.appSelecionada}" selectionMode="single" rowKey="#{app.dname}">
+
+				<p:ajax event="rowSelect" update=":formApp:btnPanel" />
+				
+		        <p:column headerText="Nome" width="180"
+		        			sortBy="#{app.name}">
+                    <h:outputText value="#{app.name}" />
+		        </p:column>
+
+		        <p:column headerText="Certificado (DN)" width="754"
+		        			sortBy="#{app.dname}">
+                    <h:outputText value="#{app.dname}" />
+		        </p:column>
+
+		    </p:dataTable>
+
+			<p:spacer width="100%" height="4px" />
+
+			<p:panel id="btnPanel" style="text-align:center;border:1px solid silver;margin:0px;padding:0px">
+           		<p:commandButton id="delButton"
+           				update=":formApp:dlgConfirm,:formApp:messages,:formApp:statusDialog"
+           				icon="ui-icon-cancel" value="Remover Aplicação" title="Remover Aplicação Confiável"
+          				oncomplete="dlgConfirm.show();" disabled="#{empty sicid.app.appSelecionada}" />
+			</p:panel> 				 	
+
+
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgConfirm"
+			 		header="Remover Aplicação"   
+		            severity="alert" widgetVar="dlgConfirm" closable="false"
+		            message="Tem certeza que deseja remover a aplicação selecionada?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgConfirm.hide();statusDialog.show();" update=":formApp:appList,:formApp:btnPanel"
+						action="#{sicid.app.removerAppConfiavel}" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+			
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

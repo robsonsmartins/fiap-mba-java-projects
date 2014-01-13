@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Nova AC Raiz - ICP Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Nova AC Raiz</h1>
+	</ui:define>
+		
+	<ui:define name="content">
+		<h:form id="formACRaiz" method="post">
+			<p:panel style="border:none">
+				<h:panelGroup layout="block" style="width:800px">
+	
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+				 	<h:outputText value="Nome:" />
+				 	<h:outputText value="Nome comum (CN):" />
+				 	<p:inputText value="#{icpadmin.icp.acParams.name}" maxlength="20" required="true"
+				 		requiredMessage="Especifique o nome da nova AC Raiz."
+				 		title="Nome da AC Raiz a ser criada" style="width:376px" />
+				 	<p:inputText value="#{icpadmin.icp.acParams.subjCN}" maxlength="128" required="true"
+				 		requiredMessage="Especifique o nome comum da nova AC Raiz."
+				 		title="Nome Comum da AC Raiz a ser criada" style="width:376px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>	
+
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+				 	<h:outputText value="Senha:" />
+			 		<h:outputText value="Confirmar Senha:" />
+				 	<p:password id="pwd" value="#{icpadmin.icp.acParams.keyPassword}" maxlength="20" required="true"
+				 		requiredMessage="Especifique a senha da AC Raiz." match="pwd2"
+				 		validatorMessage="Senhas não conferem. Digite novamente."
+				 		promptLabel="Digite a senha" goodLabel="Boa" strongLabel="Forte" weakLabel="Fraca"
+				 		title="Senha da AC Raiz a ser criada" feedback="true" inline="false" style="width:376px" />
+			 		<p:password id="pwd2" value="#{icpadmin.icp.acParams.keyPassword}" maxlength="20" required="true"
+				 		requiredMessage="Confirme a senha da AC Raiz."
+				 		title="Confirmação da Senha da AC Raiz" style="width:376px" />
+				</h:panelGrid>
+			 	
+				<p:spacer height="2"/>	
+				
+				<h:panelGrid columns="3" cellpadding="2" width="100%">
+				 	<h:outputText value="Sigla do País (C):" />
+				 	<h:outputText value="Organização (O):" />
+				 	<h:outputText value="Departamento (OU):" />
+				 	<p:inputText value="#{icpadmin.icp.acParams.subjC}" maxlength="2" required="true"
+				 		requiredMessage="Especifique a sigla do País (ex. &quot;BR&quot;)."
+				 		title="Sigla do País da AC Raiz a ser criada" style="width:130px">
+				 	</p:inputText>
+				 	<p:inputText value="#{icpadmin.icp.acParams.subjO}" maxlength="128" required="true"
+				 		requiredMessage="Especifique o nome da Organização."
+				 		title="Nome da Organização da AC Raiz a ser criada" style="width:300px" />
+				 	<p:inputText value="#{icpadmin.icp.acParams.subjOU}" maxlength="128" required="true"
+				 		requiredMessage="Especifique o nome do Departamento."
+				 		title="Nome do Departamento da AC Raiz a ser criada" style="width:300px" />
+				</h:panelGrid>
+
+				<p:spacer height="2"/>	
+
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+				 	<h:outputText value="URI da LCR:" />
+				 	<h:outputText value="URI do DPC:" />
+				 	<p:inputText value="#{icpadmin.icp.acParams.crlURI}" maxlength="256" required="true"
+				 		requiredMessage="Especifique o endereço onde será publicada a LCR."
+				 		title="Endereço (URI) para a Lista de Certificados Revogados" style="width:376px" />
+				 	<p:inputText value="#{icpadmin.icp.acParams.cpsURI}" maxlength="256" required="true"
+				 		requiredMessage="Especifique o endereço onde será publicado o DPC."
+				 		title="Endereço (URI) para o Documento de Políticas de Certificação" style="width:376px" />
+				</h:panelGrid>
+
+			</h:panelGroup> 
+
+			 <f:facet name="footer">
+			 	<p align="center">
+            		<p:commandButton value="Salvar" ajax="false" action="#{icpadmin.icp.adicionarACRaiz}"
+            			onclick="statusDialog.show();" onsuccess="statusDialog.hide();" />
+					&nbsp;  
+					<p:commandButton value="Cancelar" ajax="false" immediate="true" action="#{icpadmin.icp.goToAcRaiz}" />
+	            </p>
+			 </f:facet>
+		
+		 
+			 <p:dialog modal="true" widgetVar="statusDialog" header="Criando AC Raiz. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true" >  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+		 
+		 </p:panel>
+			 
+	</h:form>
+</ui:define>
+
+</ui:composition>

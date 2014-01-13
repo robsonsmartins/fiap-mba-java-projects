@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Serviços ao Cidadão - Receita Nacional</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Situação Tributária</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+		<h:form id="formCidadao" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+			<p:panel id="btnPanel" style="text-align:center;border:1px solid silver;margin:0px;padding:0px">
+				<h:panelGrid columns="2" cellpadding="0">
+					<p:spacer width="4px" />
+	               	<p:commandButton icon="ui-icon-check" 
+	               			value="Pagar Tributo" title="Pagar Tributo devido"
+	               			oncomplete="dlgPagar.show();" update=":formCidadao:dlgPagar,:formCidadao:messages,:formCidadao:statusDialog"
+	               			disabled="#{(empty receita.tributo.tributoSelecionado) or (receita.tributo.tributoSelecionado.impostoPago)}" />
+				</h:panelGrid>
+			</p:panel> 				 	
+
+			<p:spacer width="100%" height="4px" />
+
+		    <p:dataTable var="tributo" value="#{receita.tributo.listarTributosCidadaoLogado}"
+		    			 id="tributoList" sortBy="#{tributo.cidadao.ric}"
+		                 editable="false" emptyMessage="Nenhuma pendência tributária."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{receita.tributo.tributoSelecionado}" selectionMode="single" rowKey="#{tributo.ric}">
+
+				<p:ajax event="rowSelect" update=":formCidadao:btnPanel" />
+
+		        <p:column headerText="Nome" width="425"
+		        			sortBy="#{tributo.cidadao.name}">
+                    <h:outputText value="#{tributo.cidadao.name}" />
+		        </p:column>
+
+		        <p:column headerText="RIC" width="150"
+		        			sortBy="#{tributo.cidadao.ric}">
+                    <h:outputText value="#{tributo.cidadao.ric}" />
+		        </p:column>
+
+		        <p:column headerText="Valor do Tributo" width="120" style="text-align:right">
+                    <h:outputText value="#{tributo.impostoDevido}">
+						<f:convertNumber locale="pt_BR" pattern="#,##0.00;(#,##0.00)" />
+                    </h:outputText>
+		        </p:column>
+
+		        <p:column headerText="Situação" width="200"
+		        			sortBy="#{tributo.impostoPago}">
+					<p:graphicImage url="../images/#{tributo.impostoPago ? 'check' : 'cancel'}.png" width="16" height="16" />&nbsp;
+					<h:outputText value="#{tributo.impostoPago ? 'Regular' : 'Pendente' }" />
+		        </p:column>
+
+		    </p:dataTable>
+		    
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgPagar"
+			 		header="Pagar Tributo" widgetVar="dlgPagar" closable="false"
+		            message="Escolha a forma de pagamento">  
+	            <p align="center">
+	            	&nbsp;&nbsp;
+					<p:commandButton value="Banco Seguro" onclick="dlgPagar.hide();statusDialog.show();" update=":formCidadao:tributoList,:formCidadao:btnPanel"
+						action="#{receita.tributo.pagarTributo}" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Boleto Bancário" onclick="dlgPagar.hide()" type="button" disabled="true" />&nbsp;&nbsp;
+					<p:commandButton value="Cancelar" onclick="dlgPagar.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+				
+			<p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="Processando. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			</p:dialog>  			
+		    
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

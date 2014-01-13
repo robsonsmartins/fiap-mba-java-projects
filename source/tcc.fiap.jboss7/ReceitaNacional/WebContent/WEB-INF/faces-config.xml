@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+
+	<navigation-rule>
+		<display-name>admin</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>admin</from-outcome>
+			<to-view-id>/admin/admin.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>governo</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>governo</from-outcome>
+			<to-view-id>/admin/governo.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>cidadao</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>cidadao</from-outcome>
+			<to-view-id>/user/cidadao.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+</faces-config>

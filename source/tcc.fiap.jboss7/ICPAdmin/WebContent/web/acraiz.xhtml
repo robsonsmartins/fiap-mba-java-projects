@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Gerenciamento de AC Raiz - ICP Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>AC Raiz</h1>
+	</ui:define>
+		
+	<ui:define name="content">
+		<h:form id="formACRaiz" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+			<p:panel id="btnPanel" style="text-align:left;border:none">  
+               	<p:commandButton id="addAC" icon="ui-icon-plus" value="Adicionar" title="Adicionar AC Raiz"
+               		action="#{icpadmin.icp.goToNewAcRaiz}" ajax="false" />&nbsp;  
+               	<p:commandButton id="delButton" update=":formACRaiz:dlgRemConfirm,:formACRaiz:statusDialog" icon="ui-icon-trash"
+               			 value="Excluir" title="Excluir AC Raiz" oncomplete="dlgRemConfirm.show();" disabled="#{empty icpadmin.icp.acSelecionada}">  
+                		<f:setPropertyActionListener value="removerACRaiz" target="#{icpadmin.icp.actionSelecionada}" />
+           		</p:commandButton>&nbsp;
+               	<p:commandButton id="downCertButton" icon="ui-icon-script" value="Certificado AC" title="Download do Certificado da AC"
+               			action="#{icpadmin.icp.downloadCertAC}" ajax="false" disabled="#{empty icpadmin.icp.acSelecionada}" />&nbsp;  
+               	<p:commandButton id="downLcrButton"
+               			update=":formACRaiz:dlgLcrConfirm,:formACRaiz:messages,:formACRaiz:dlgAcPwd,:formACRaiz:acPwd"
+               			icon="ui-icon-note" value="LCR" title="Download/Emissão de LCR" oncomplete="dlgLcrConfirm.show();"
+               			disabled="#{empty icpadmin.icp.acSelecionada}" />&nbsp;  
+               	<p:commandButton id="downChainButton" icon="ui-icon-grip-dotted-horizontal" value="Cadeia AC"
+               			title="Download da Cadeia de Certificados da AC"
+               			action="#{icpadmin.icp.downloadCertChainAC}" ajax="false" disabled="#{empty icpadmin.icp.acSelecionada}" />&nbsp;  
+               	<p:commandButton id="addAcButton" icon="ui-icon-folder-collapsed" value="Adicionar AC Int." title="Adicionar AC Intermediária"
+               			action="#{icpadmin.icp.goToNewAcInterm}" ajax="false" disabled="#{empty icpadmin.icp.acSelecionada}" />&nbsp;  
+               	<p:commandButton id="emiteCertButton" icon="ui-icon-document" value="Certificados" title="Emissão de Certificados"
+               			action="#{icpadmin.icp.goToCert}" ajax="false" disabled="#{empty icpadmin.icp.acSelecionada}" />&nbsp;  
+               	<p:commandButton id="renewCertButton"
+               			update=":formACRaiz:dlgRenewConfirm,:formACRaiz:messages,:formACRaiz:dlgAcPwd,:formACRaiz:acPwd,:formACRaiz:statusDialog"
+               			icon="ui-icon-arrowrefresh-1-s" value="Renovar AC" title="Renovar Certificado da AC"
+               			oncomplete="dlgRenewConfirm.show();" disabled="true">  
+                		<f:setPropertyActionListener value="renovarACRaizCert" target="#{icpadmin.icp.actionSelecionada}" />
+           		</p:commandButton>
+       		</p:panel>
+       		
+		    <p:dataTable var="ac" value="#{icpadmin.icp.listarACRaiz}" id="acList" sortBy="#{ac.commonName}"
+		                 editable="false" emptyMessage="Nenhuma AC Raiz cadastrada."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{icpadmin.icp.acSelecionada}" selectionMode="single" rowKey="#{ac.name}" >
+	
+				<p:ajax event="rowSelect" update=":formACRaiz:btnPanel" />
+
+		        <p:column headerText="Nome" width="120" sortBy="#{ac.name}">
+                    <h:outputText value="#{ac.name}" />
+		        </p:column>
+
+		        <p:column headerText="Nome Comum (CN)" width="478" sortBy="#{ac.commonName}">
+                    <h:outputText value="#{ac.commonName}" />
+		        </p:column>
+
+		        <p:column headerText="Organização (O)" width="150" sortBy="#{ac.organization}">
+                    <h:outputText value="#{ac.organization}" />
+		        </p:column>
+
+		        <p:column headerText="Departamento (OU)" width="150" sortBy="#{ac.orgUnit}">
+                    <h:outputText value="#{ac.orgUnit}" />
+		        </p:column>
+		    </p:dataTable>
+              
+			<p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgRemConfirm"
+		            header="Excluir AC Raiz" severity="alert" widgetVar="dlgRemConfirm" closable="false"
+		            message="Tem certeza que deseja excluir a AC Raiz '#{icpadmin.icp.acSelecionada.name}'?">  
+	            <p align="center">
+					<p:commandButton id="btnRemover" value="Sim" update=":formACRaiz" action="#{icpadmin.icp.removerACRaiz}" 
+							onclick="dlgRemConfirm.hide();statusDialog.show();" onsuccess="statusDialog.hide();" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgRemConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+			
+			<p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgLcrConfirm"
+		            header="Lista de Certificados Revogados (LCR)" severity="alert" widgetVar="dlgLcrConfirm"
+		            message="Deseja realizar o download da lista atual ou emitir uma nova LCR?" closable="false">  
+	            <p align="center">
+					<p:commandButton id="btnDldLcr" value="Download" ajax="false"  
+							action="#{icpadmin.icp.downloadLcrAC}" onclick="dlgLcrConfirm.hide()" />&nbsp;&nbsp;  
+					<p:commandButton id="btnEmitirLcr" value="Emitir" update=":formACRaiz:statusDialog"  
+							oncomplete="dlgLcrConfirm.hide();dlgAcPwd.show()">
+	               		<f:setPropertyActionListener value="criarACRaizLCR" target="#{icpadmin.icp.actionSelecionada}" />
+					</p:commandButton>&nbsp;&nbsp;  
+					<p:commandButton value="Cancelar" onclick="dlgLcrConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgRenewConfirm"
+			 		header="Renovar Certificado"   
+		            severity="alert" widgetVar="dlgRenewConfirm" closable="false"
+		            message="Tem certeza que deseja renovar o certificado da AC Raiz?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgRenewConfirm.hide();dlgAcPwd.show()" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgRenewConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+              
+			<p:dialog id="dlgAcPwd" header="Senha da AC Raiz" widgetVar="dlgAcPwd" modal="true"
+				hideEffect="explode" closable="false" resizable="false">  
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+			 		<h:outputText value="Senha da AC Raiz:" />
+			 		<p:password id="acPwd" value="#{icpadmin.icp.acParams.caPassword}"
+			 			title="Senha da AC Raiz" feedback="false" style="width:150px" />
+					<f:facet name="footer">  
+			            <p align="center">
+						    <p:commandButton id="dlgAcPwdBtnOK" value="OK" action="#{icpadmin.icp[icpadmin.icp.actionSelecionada]}" ajax="false"
+						    	onclick="dlgAcPwd.hide();statusDialog.show();" onsuccess="statusDialog.hide();"/>&nbsp;&nbsp;  
+							<p:commandButton value="Cancelar" oncomplete="dlgAcPwd.hide()"
+								action="#{icpadmin.icp.resetAcParams}" update=":formACRaiz:acPwd"/>
+						</p>
+					</f:facet>  
+				</h:panelGrid>
+			</p:dialog>  			
+
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="#{icpadmin.icp.actionSelecionada == 'removerACRaiz' ? 'Removendo' :
+			 		 	(icpadmin.icp.actionSelecionada == 'renovarACRaizCert' ? 'Renovando certificado da' : 'Emitindo LCR para a')} AC Raiz. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

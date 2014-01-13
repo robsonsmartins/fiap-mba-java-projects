@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="TccFiapEApp">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="BancoSeguro.war" deploy-path="/" handle="module:/resource/BancoSeguro/BancoSeguro">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SICidCommon.jar" deploy-path="/lib" handle="module:/resource/SICidCommon/SICidCommon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SICidLoginModule.jar" deploy-path="/" handle="module:/resource/SICidLoginModule/SICidLoginModule">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ICPAdmin.war" deploy-path="/" handle="module:/resource/ICPAdmin/ICPAdmin">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ReceitaNacional.war" deploy-path="/" handle="module:/resource/ReceitaNacional/ReceitaNacional">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="BancoSeguroCommon.jar" deploy-path="/lib" handle="module:/resource/BancoSeguroCommon/BancoSeguroCommon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SICidEJB.jar" deploy-path="/" handle="module:/resource/SICidEJB/SICidEJB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SICidWeb.war" deploy-path="/" handle="module:/resource/SICidWeb/SICidWeb">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="TccFiapCommon.jar" deploy-path="/lib" handle="module:/resource/TccFiapCommon/TccFiapCommon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="BancoSeguroEJB.jar" deploy-path="/" handle="module:/resource/BancoSeguroEJB/BancoSeguroEJB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ReceitaNacionalEJB.jar" deploy-path="/" handle="module:/resource/ReceitaNacionalEJB/ReceitaNacionalEJB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ReceitaNacionalCommon.jar" deploy-path="/lib" handle="module:/resource/ReceitaNacionalCommon/ReceitaNacionalCommon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ICPAdminCommon.jar" deploy-path="/lib" handle="module:/resource/ICPAdminCommon/ICPAdminCommon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ICPAdminEJB.jar" deploy-path="/" handle="module:/resource/ICPAdminEJB/ICPAdminEJB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="BancoSeguroService.jar" deploy-path="/" handle="module:/resource/BancoSeguroService/BancoSeguroService">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SICidService.jar" deploy-path="/" handle="module:/resource/SICidService/SICidService">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

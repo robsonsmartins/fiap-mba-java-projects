@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="headTitle">
+		<title>Gerenciamento de Certificados - ICP Admin</title>
+	</ui:define>
+	
+	<ui:define name="title">
+		<h1>Certificados</h1>
+	</ui:define>
+	
+	<ui:define name="content">
+		<h:form id="formCert" method="post">
+			<p:growl id="messages" showDetail="false"/>
+			
+			<p:panel id="btnPanel" style="text-align:left;border:none;margin:0px;padding:0px">
+				<h:panelGrid columns="12" cellpadding="0">
+				 	<h:outputText value="AC Emissora:&nbsp;&nbsp;" />
+					<p:selectOneMenu value="#{icpadmin.icp.acSelecionada}" effect="fade" required="false" converter="#{icpadmin.icp.caConverter}"
+				 		requiredMessage="Especifique a AC Emissora." title="Nome da AC Emissora" style="width:200px">  
+						<f:selectItem itemLabel="Selecione..." itemValue="#{null}"  />  
+						<f:selectItems value="#{icpadmin.icp.listarAC}" var="acRaiz" itemLabel="#{acRaiz.commonName}" itemValue="#{acRaiz}"/>
+						<p:ajax event="change" update="certList,btnPanel" listener="#{icpadmin.icp.recarregarListaCert}" />
+					</p:selectOneMenu>
+					<p:spacer width="20px" />
+					<p:commandButton id="addCert" icon="ui-icon-document" value="Emitir" title="Emitir Certificado"
+						action="#{icpadmin.icp.goToNewCert}" ajax="false" />
+					<p:spacer width="4px" />
+	               	<p:commandButton id="dldCertButton" icon="ui-icon-script" disabled="#{empty icpadmin.icp.certSelecionado}"
+	               			 value="Download Certificado" title="Download do Certificado" oncomplete="dlgDldCert.show();" 
+	               			 update=":formCert:dlgDldCert" />
+					<p:spacer width="4px" />
+	               	<p:commandButton id="dldKeyButton" icon="ui-icon-key" disabled="#{empty icpadmin.icp.certSelecionado}"
+	               			 value="Download Chave" title="Download da Chave Privada" oncomplete="dlgDldKey.show();" 
+	               			 update=":formCert:dlgDldKey" />
+					<p:spacer width="4px" />
+	               	<p:commandButton id="delButton"
+	               			update=":formCert:dlgConfirm,:formCert:dlgAcPwd,:formCert:messages,:formCert:acPwd,:formCert:statusDialog"
+	               			icon="ui-icon-cancel" value="Revogar" title="Revogar Certificado" oncomplete="dlgConfirm.show();"
+	               			disabled="#{(empty icpadmin.icp.certSelecionado) or (icpadmin.icp.certSelecionado.status.id != 0)}">  
+	                		<f:setPropertyActionListener value="revogarCert" target="#{icpadmin.icp.actionSelecionada}" />
+	              	</p:commandButton>
+					<p:spacer width="4px" />
+	               	<p:commandButton id="renewButton"
+	               			update=":formCert:dlgConfirm,:formCert:dlgAcPwd,:formCert:messages,:formCert:acPwd,:formCert:statusDialog"
+	               			icon="ui-icon-arrowrefresh-1-s" value="Renovar" title="Renovar Certificado" oncomplete="dlgConfirm.show();"
+	               			disabled="#{(empty icpadmin.icp.certSelecionado) or (icpadmin.icp.certSelecionado.status.id == 2)}">  
+	                		<f:setPropertyActionListener value="renovarCert" target="#{icpadmin.icp.actionSelecionada}" />
+	              	</p:commandButton>
+				</h:panelGrid>
+			</p:panel> 				 	
+
+		    <p:dataTable var="cert" value="#{icpadmin.icp.listarCert}" id="certList"
+		                 editable="false" emptyMessage="Nenhum certificado emitido."
+		                 scrollable="true" scrollHeight="350" style="text-align:left"
+		                 selection="#{icpadmin.icp.certSelecionado}" selectionMode="single" rowKey="#{cert.id}">
+
+				<p:ajax event="rowSelect" update=":formCert:btnPanel" />
+
+		        <p:column headerText="Status" width="110" sortBy="#{cert.status.descricao}">
+ 					<p:graphicImage url="../images/#{cert.status.id == 2 ? 'cancel' :
+					   	 (cert.status.id == 1 ? 'down' : 'check')}.png" width="16" height="16" />&nbsp;
+					<h:outputText value="#{cert.status.descricao}" />
+		        </p:column>
+
+		        <p:column headerText="Tipo" width="140" sortBy="#{cert.tipo.descricao}">
+                    <h:outputText value="#{cert.tipo.descricao}" />
+		        </p:column>
+
+		        <p:column headerText="Nome Comum (CN)" width="447" sortBy="#{cert.commonName}">
+                    <h:outputText value="#{cert.commonName}" />
+		        </p:column>
+
+		        <p:column headerText="Emitido" width="90" sortBy="#{cert.emissao}">
+                    <h:outputText value="#{cert.emissao}">
+                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+		        </p:column>
+
+		        <p:column headerText="Expira" width="90" sortBy="#{cert.expiracao}">
+                    <h:outputText value="#{cert.expiracao}">
+                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+		        </p:column>
+
+		    </p:dataTable>
+		    
+		    <p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgConfirm"
+			 		header="#{icpadmin.icp.actionSelecionada == 'renovarCert' ? 'Renovar' : 'Revogar'} Certificado"   
+		            severity="alert" widgetVar="dlgConfirm" closable="false"
+		            message="Tem certeza que deseja #{icpadmin.icp.actionSelecionada == 'renovarCert' ? 'renovar' : 'revogar'} o certificado selecionado?">  
+	            <p align="center">
+					<p:commandButton value="Sim" onclick="dlgConfirm.hide();dlgAcPwd.show()" />&nbsp;&nbsp;  
+					<p:commandButton value="Não" onclick="dlgConfirm.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+			
+			<p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgDldCert"
+		            header="Download de Certificado" severity="alert" widgetVar="dlgDldCert"
+		            message="Especifique o formato do certificado para download" closable="false">  
+	            <p align="center">&nbsp;&nbsp;
+					<p:commandButton id="btnDldCertCer" value="CER (PEM)" ajax="false"  
+							action="#{icpadmin.icp.downloadCert}" onclick="dlgDldCert.hide()" />&nbsp;&nbsp;  
+					<p:commandButton id="btnDldCertPfx" value="PFX (PKCS#12)" ajax="false"  
+							action="#{icpadmin.icp.downloadCertPkcs12}" onclick="dlgDldCert.hide()" />&nbsp;&nbsp;  
+					<p:commandButton value="Cancelar" onclick="dlgDldCert.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+			
+			<p:confirmDialog  
+		            showEffect="bounce" hideEffect="explode" modal="true" id="dlgDldKey"
+		            header="Download de Chave Privada" severity="alert" widgetVar="dlgDldKey"
+		            message="Especifique o formato da chave privada para download" closable="false">  
+	            <p align="center">&nbsp;&nbsp;
+					<p:commandButton id="btnDldKeyCrypt" value="Criptografada" ajax="false"  
+							action="#{icpadmin.icp.downloadKey}" onclick="dlgDldKey.hide()" />&nbsp;&nbsp;  
+					<p:commandButton id="btnDldKeyPlain" value="Sem Senha" ajax="false"  
+							action="#{icpadmin.icp.downloadKeyPlain}" onclick="dlgDldKey.hide()" />&nbsp;&nbsp;  
+					<p:commandButton value="Cancelar" onclick="dlgDldKey.hide()" type="button" />
+				</p>
+			</p:confirmDialog>
+              
+			<p:dialog id="dlgAcPwd" header="Senha da AC Emissora" widgetVar="dlgAcPwd" modal="true"
+				hideEffect="explode" closable="false" resizable="false">  
+				<h:panelGrid columns="2" cellpadding="2" width="100%">
+			 		<h:outputText value="Senha da AC Emissora:" />
+			 		<p:password id="acPwd" value="#{icpadmin.icp.certParams.caPassword}"
+			 			title="Senha da AC Emissora" feedback="false" style="width:150px" />
+					<f:facet name="footer">  
+			            <p align="center">
+						    <p:commandButton id="dlgAcPwdBtnOK" value="OK" ajax="false" action="#{icpadmin.icp[icpadmin.icp.actionSelecionada]}"
+						    	onclick="dlgAcPwd.hide();statusDialog.show();" onsuccess="statusDialog.hide();"/>&nbsp;&nbsp;  
+							<p:commandButton value="Cancelar" oncomplete="dlgAcPwd.hide()"
+								action="#{icpadmin.icp.resetCertParams}" update=":formCert:acPwd"/>
+						</p>
+					</f:facet>  
+				</h:panelGrid>
+			</p:dialog>  			
+
+			 <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog"
+			 		 header="#{icpadmin.icp.actionSelecionada == 'renovarCert' ? 'Renovando' : 'Revogando'} Certificado. Aguarde..."   
+			         draggable="false" closable="false" resizable="false" dynamic="true">  
+			     <p:graphicImage value="../images/ajaxloadingbar.gif" />  
+			 </p:dialog>  			
+
+		</h:form>
+           	
+	</ui:define>
+
+</ui:composition>

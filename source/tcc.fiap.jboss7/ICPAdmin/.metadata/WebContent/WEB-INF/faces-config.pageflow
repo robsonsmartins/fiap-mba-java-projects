@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13408126494610" configfile="/ICPAdmin/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="acraiz" id="pf13408127079941" referenceLink="//@navigationRule.6/@fromViewId|" outlinks="pf13468525704670 pf13468525704671 pf13468525704672 pf13468525704673 pf13468525704674 pf13468525704675 pf13501556726620" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/acraiz.xhtml" id="pf13468525704676" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13468525704670" path="/web/acraiz.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/acinterm.xhtml" id="pf13468525704677" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf13468525704671" path="/web/acinterm.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/cert.xhtml" id="pf13468525704678" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf13468525704672" path="/web/cert.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/newacraiz.xhtml" id="pf13468525704679" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" inlinks="pf13468525704673" path="/web/newacraiz.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/newac.xhtml" id="pf134685257046710" referenceLink="//@navigationRule.4/@navigationCase.0/@toViewId|" inlinks="pf13468525704674" path="/web/newac.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/newcert.xhtml" id="pf134685257046711" referenceLink="//@navigationRule.6/@navigationCase.0/@toViewId|" inlinks="pf13468525704675" path="/web/newcert.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="web/admin.xhtml" id="pf13501556726621" referenceLink="//@navigationRule.6/@navigationCase.0/@toViewId|" inlinks="pf13501556726620" path="/web/admin.xhtml"/>
+  <links id="pf13468525704670" target="pf13468525704676" source="pf13408127079941" outcome="acraiz" redirect="true"/>
+  <links id="pf13468525704671" target="pf13468525704677" source="pf13408127079941" outcome="acinterm" redirect="true"/>
+  <links id="pf13468525704672" target="pf13468525704678" source="pf13408127079941" outcome="cert" redirect="true"/>
+  <links id="pf13468525704673" target="pf13468525704679" source="pf13408127079941" outcome="newacraiz" redirect="true"/>
+  <links id="pf13468525704674" target="pf134685257046710" source="pf13408127079941" outcome="newac" redirect="true"/>
+  <links id="pf13468525704675" target="pf134685257046711" source="pf13408127079941" outcome="newcert" redirect="true"/>
+  <links id="pf13501556726620" target="pf13501556726621" source="pf13408127079941" outcome="admin" redirect="true"/>
+</pageflow:Pageflow>

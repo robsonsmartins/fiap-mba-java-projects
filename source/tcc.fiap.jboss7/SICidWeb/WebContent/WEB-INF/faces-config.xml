@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+
+	<navigation-rule>
+		<display-name>trustedCert</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>trustedCert</from-outcome>
+			<to-view-id>/admin/certs.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>trustedApps</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>trustedApps</from-outcome>
+			<to-view-id>/admin/apps.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>trustedUsers</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>trustedUsers</from-outcome>
+			<to-view-id>/admin/users.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>cidadao</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>cidadao</from-outcome>
+			<to-view-id>/admin/cidadao.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>newcidadao</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>newcidadao</from-outcome>
+			<to-view-id>/admin/newcidadao.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+</faces-config>

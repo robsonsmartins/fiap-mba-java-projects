@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13480114473120" configfile="/BancoSeguro/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="gerentes" id="pf13493845237760" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf13493845237771 pf13495560381250 pf13501705795112 pf13507802698840" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/gerentes.xhtml" id="pf13493845237772" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13493845237771" path="/admin/gerentes.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/contas.xhtml" id="pf13495560381251" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf13495560381250" path="/admin/contas.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="user/banco.xhtml" id="pf13501705795113" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf13501705795112" path="/user/banco.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="admin/apps.xhtml" id="pf13507802698941" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" inlinks="pf13507802698840" path="/admin/apps.xhtml"/>
+  <links id="pf13493845237771" target="pf13493845237772" source="pf13493845237760" outcome="gerentes" redirect="true"/>
+  <links id="pf13495560381250" target="pf13495560381251" source="pf13493845237760" outcome="contas" redirect="true"/>
+  <links id="pf13501705795112" target="pf13501705795113" source="pf13493845237760" outcome="banco" redirect="true"/>
+  <links id="pf13507802698840" target="pf13507802698941" source="pf13493845237760" outcome="trustedApps" redirect="true"/>
+</pageflow:Pageflow>

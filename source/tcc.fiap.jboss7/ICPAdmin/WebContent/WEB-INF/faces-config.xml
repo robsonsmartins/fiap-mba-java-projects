@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+
+	<navigation-rule>
+		<display-name>acraiz</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>acraiz</from-outcome>
+			<to-view-id>/web/acraiz.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>acinterm</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>acinterm</from-outcome>
+			<to-view-id>/web/acinterm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>cert</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>cert</from-outcome>
+			<to-view-id>/web/cert.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>newacraiz</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>newacraiz</from-outcome>
+			<to-view-id>/web/newacraiz.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>newac</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>newac</from-outcome>
+			<to-view-id>/web/newac.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<display-name>newcert</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>newcert</from-outcome>
+			<to-view-id>/web/newcert.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<display-name>admin</display-name>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>admin</from-outcome>
+			<to-view-id>/web/admin.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+</faces-config>
